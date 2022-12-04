@@ -48,7 +48,7 @@ router.post('/signUp', [
       res.status(500).json({
         message: 'На сервере что-то пошло не так. Попробуйте позже...',
       });
-      console.log(error);
+      // console.log(error);
     }
   },
 ]);
@@ -107,7 +107,7 @@ router.post('/signIn', [
       res.status(500).json({
         message: 'На сервере что-то пошло не так. Попробуйте позже...',
       });
-      console.log(error);
+      // console.log(error);
     }
   },
 ]);
@@ -141,7 +141,7 @@ router.post('/token', async (req, res) => {
     res.status(500).json({
       message: 'На сервере что-то пошло не так. Попробуйте позже...',
     });
-    console.log(error);
+    // console.log(error);
   }
 });
 
