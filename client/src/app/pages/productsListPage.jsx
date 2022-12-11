@@ -1,28 +1,31 @@
 import React, { useState, useEffect } from "react";
-import api from "../api";
 import _ from "lodash";
 import { paginate } from "../utils/paginate";
-import CardProduct from "../components/cardProduct";
+import CardProduct from "../components/ui/cardProduct";
 import Pagination from "../components/common/pagination";
 import GroupList from "../components/common/groupList";
 import SearchField from "../components/form/searchField";
 import Loader from "../components/common/loader";
-import httpService from "../services/http.service";
+import { useSelector } from "react-redux";
+import { getProducts, getProductsLoadingStatus } from "../store/products";
+import {
+    getTypeProduct,
+    getTypeProductLoadingStatus
+} from "../store/typeProduct";
+import { scrollToUpPage } from "../utils/scrollToUpPage";
 
 const ProductsListPage = () => {
-    const [products, setProducts] = useState();
-    const [typeProduct, setTypeProduct] = useState();
+    const products = useSelector(getProducts());
+    const typeProduct = useSelector(getTypeProduct());
+    const isLoadingStatusProducts = useSelector(getProductsLoadingStatus());
+    const isLoadingStatusTypeProduct = useSelector(
+        getTypeProductLoadingStatus()
+    );
     const [selectedTypeProduct, setSelectedTypeProduct] = useState();
     const [searchQuery, setSearchQuery] = useState("");
     const [sortBy, setSortBy] = useState({ path: "price", order: "desc" });
     const [currentPage, setCurrentPage] = useState(1);
     const pageSize = 8;
-
-    const productsEndpoint = "products/";
-
-    useEffect(() => {
-        httpService.get(productsEndpoint);
-    }, []);
 
     const handleTypeProductSelect = (items) => {
         setSelectedTypeProduct(items);
@@ -31,13 +34,13 @@ const ProductsListPage = () => {
 
     const handlePageChange = (pageIndex) => {
         setCurrentPage(pageIndex);
-        // Прокрутка на начало страницы при переходе
-        window.scrollTo(0, 0);
+        scrollToUpPage();
     };
 
     const clearFilter = () => {
         setSelectedTypeProduct();
         setCurrentPage(1);
+        setSearchQuery("");
     };
 
     const handleSearchQuery = ({ target }) => {
@@ -58,25 +61,22 @@ const ProductsListPage = () => {
         // }
     };
 
-    useEffect(() => {
-        api.products.fetchAll().then((data) => setProducts(data));
-        api.products.fetchAllByType().then((data) => setTypeProduct(data));
-    }, []);
-
     // Выставляет 1 страницу при переключении категорий
     useEffect(() => {
         setCurrentPage(1);
     }, [selectedTypeProduct, searchQuery]);
 
-    if (products) {
+    if (!isLoadingStatusProducts) {
         const filteredProducts = searchQuery
             ? products.filter(
                   (product) =>
                       product.name.toLowerCase().indexOf(searchQuery) !== -1
               )
             : selectedTypeProduct
-            ? products.filter((product) =>
-                  _.isEqual(product.category, selectedTypeProduct)
+            ? products.filter(
+                  (product) =>
+                      //   _.isEqual(product.category, selectedTypeProduct)
+                      product.typeProduct === selectedTypeProduct._id
               )
             : products;
 
@@ -91,11 +91,11 @@ const ProductsListPage = () => {
         const productsCrop = paginate(sorteredProducts, currentPage, pageSize);
 
         return (
-            <div className="d-flex flex-column p-2">
+            <div className="d-flex flex-column">
                 <div className="d-sm-inline-flex align-items-center mx-4">
-                    {typeProduct && (
+                    {!isLoadingStatusTypeProduct && (
                         <>
-                            <div className="me-3 mt-2">
+                            <div className="me-3">
                                 <button
                                     className="btn list-group-item-action list-group-item-warning text-center border-warning"
                                     onClick={clearFilter}
@@ -103,14 +103,14 @@ const ProductsListPage = () => {
                                     все
                                 </button>
                             </div>
-                            <div className="me-3 mt-2">
+                            <div className="me-3">
                                 <GroupList
                                     selectedItem={selectedTypeProduct}
                                     items={typeProduct}
                                     onItemSelect={handleTypeProductSelect}
                                 />
                             </div>
-                            <div className="mt-2 me-3">
+                            <div className="me-3">
                                 <button
                                     onClick={() => handleSort("price")}
                                     className="btn list-group-item-action list-group-item-warning text-center border-warning"

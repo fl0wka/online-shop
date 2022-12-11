@@ -1,7 +1,16 @@
-import React from "react";
-import { Outlet } from "react-router-dom";
+import React, { useEffect } from "react";
+import { Outlet, useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { getIsLoggedIn } from "../store/currentUser";
 
 const Auth = () => {
+    const isLogged = useSelector(getIsLoggedIn());
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if (isLogged) return navigate("/");
+    }, []);
+
     return (
         <div className="container mt-5">
             <div className="row">

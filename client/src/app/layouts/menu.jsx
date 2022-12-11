@@ -3,7 +3,7 @@ import { Outlet } from "react-router-dom";
 
 const Menu = () => {
     return (
-        <div className="container-fluid">
+        <div className="container-fluid mt-2">
             <Outlet />
         </div>
     );

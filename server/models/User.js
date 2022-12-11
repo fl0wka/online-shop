@@ -2,13 +2,12 @@ const { Schema, model } = require('mongoose');
 
 const schema = Schema(
   {
-    fio: String,
+    name: String,
     email: { type: String, required: true, unique: true },
     password: String,
     sex: { type: String, enum: ['male', 'female', 'other'] },
     city: String,
-    country: String,
-    zip: String,
+    street: String,
     license: Boolean,
   },
   { timestamps: true }

@@ -1,14 +1,33 @@
 import axios from "axios";
+import { toast } from "react-toastify";
 import configFile from "../config.json";
+import authService from "./auth.service";
+import localStorageService from "./localStorage.service";
 
 axios.defaults.baseURL = configFile.apiEndpoint;
 
 axios.interceptors.request.use(
-    function (config) {
-        if (configFile.isFireBase) {
-            const containSlash = /\/$/gi.test(config.url);
-            config.url =
-                (containSlash ? config.url.slice(0, -1) : config.url) + ".json";
+    async function (config) {
+        const expiresDate = localStorageService.getTokenExpiresDate();
+        const refreshToken = localStorageService.getRefreshToken();
+        const isExpired = refreshToken && expiresDate < Date.now();
+
+        // if (configFile.isFireBase) {
+        //     const containSlash = /\/$/gi.test(config.url);
+        //     config.url =
+        //         (containSlash ? config.url.slice(0, -1) : config.url) + ".json";
+        // }
+
+        if (isExpired) {
+            const data = await authService.refresh();
+            localStorageService.setTokens(data);
+        }
+        const accessToken = localStorageService.getAccessToken();
+        if (accessToken) {
+            config.headers = {
+                ...config.headers,
+                Authorization: `Bearer ${accessToken}`
+            };
         }
         return config;
     },
@@ -19,7 +38,7 @@ axios.interceptors.request.use(
 
 axios.interceptors.response.use(
     (res) => {
-        console.log(res.data);
+        // console.log(res.data);
         return res;
     },
     function (error) {
@@ -28,6 +47,7 @@ axios.interceptors.response.use(
 
         if (!expectedErrors) {
             console.log("Unexpected Errors");
+            toast.error("Что-то пошло не так. Попробуйте позже...");
         }
         return Promise.reject(error);
     }

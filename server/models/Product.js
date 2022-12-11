@@ -5,6 +5,7 @@ const schema = Schema(
     name: String,
     image: String,
     content: String,
+    bookmark: Boolean,
     typeProduct: {
       type: Schema.Types.ObjectId,
       ref: 'TypeProduct',

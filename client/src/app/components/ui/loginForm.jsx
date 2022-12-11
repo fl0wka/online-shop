@@ -2,7 +2,9 @@ import React, { useEffect, useState } from "react";
 import CheckBoxField from "../form/checkBoxField";
 import TextField from "../form/textField";
 import * as yup from "yup";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { signIn } from "../../store/currentUser";
 
 const LoginForm = () => {
     const [data, setData] = useState({
@@ -11,6 +13,10 @@ const LoginForm = () => {
         stayOn: false
     });
     const [errors, setErrors] = useState({});
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const location = useLocation();
+    const from = location.state?.from || "/";
 
     const handleChange = (target) => {
         setData((prevState) => ({ ...prevState, [target.name]: target.value }));
@@ -40,7 +46,7 @@ const LoginForm = () => {
         e.preventDefault();
         const isValid = validate();
         if (!isValid) return;
-        console.log(data);
+        dispatch(signIn(data, navigate, from));
     };
 
     return (
@@ -71,7 +77,7 @@ const LoginForm = () => {
                 </CheckBoxField>
                 <button
                     type="submit"
-                    className="btn btn-primary w-100 mb-4"
+                    className="btn btn-success w-100 mb-4"
                     disabled={!isValid}
                 >
                     Войти

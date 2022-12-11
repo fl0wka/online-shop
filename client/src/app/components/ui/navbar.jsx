@@ -1,17 +1,13 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-// import Modal from "./modal";
-// import Registration from "./registerForm";
+import { useSelector } from "react-redux";
+import { getCurrentUserData, getIsLoggedIn } from "../../store/currentUser";
+import NavProfile from "./navProfile";
 
 const Navbar = () => {
     const [toggle, setToggle] = useState(false);
-    // const [modal, setModal] = useState(false);
-
-    // const closeModalHandler = () => {
-    //     if (modal) {
-    //         setModal(false);
-    //     }
-    // };
+    const currentUser = useSelector(getCurrentUserData());
+    const isLoggedIn = useSelector(getIsLoggedIn());
 
     const toggleCollapse = () => {
         setToggle(!toggle);
@@ -23,6 +19,7 @@ const Navbar = () => {
                 <Link to="" className="navbar-brand text-warning">
                     PIZZA TIME
                 </Link>
+                {/* Кнопка появляется при сужении ширины окна (адаптация) */}
                 <button
                     className="navbar-toggler my-2"
                     role="button"
@@ -52,15 +49,25 @@ const Navbar = () => {
                             </Link>
                         </li>
                     </ul>
-                    <Link to="purchases" className="btn text-warning me-2">
-                        <i className="bi bi-cart3 fs-5"></i>
-                    </Link>
-                    <Link to="auth" className="btn text-warning me-2">
-                        Войти
-                    </Link>
-                    <button className="btn btn-outline-secondary me-2 border-0">
-                        Выйти
-                    </button>
+                    {isLoggedIn && currentUser ? (
+                        <>
+                            <Link
+                                to={"user/cart"}
+                                className="btn text-warning me-2"
+                            >
+                                <i className="bi bi-cart3 fs-5"></i>
+                            </Link>
+                            <NavProfile />
+                        </>
+                    ) : (
+                        <Link
+                            to="auth"
+                            state={{ from: "occupation" }}
+                            className="btn text-warning me-2"
+                        >
+                            Войти
+                        </Link>
+                    )}
                 </div>
             </div>
         </nav>

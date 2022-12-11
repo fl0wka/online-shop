@@ -3,20 +3,24 @@ import CheckBoxField from "../form/checkBoxField";
 import RadioField from "../form/radioField";
 import TextField from "../form/textField";
 import * as yup from "yup";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { signUp } from "../../store/currentUser";
+import { scrollToUpPage } from "../../utils/scrollToUpPage";
 
 const RegisterForm = () => {
     const [data, setData] = useState({
         email: "",
         password: "",
-        fio: "",
+        name: "",
         sex: "male",
-        country: "",
         city: "",
-        zip: "",
+        street: "",
         license: false
     });
     const [errors, setErrors] = useState({});
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     const handleChange = (target) => {
         setData((prevState) => ({
@@ -29,31 +33,26 @@ const RegisterForm = () => {
         license: yup
             .boolean()
             .oneOf([true], "Вы должны принять пользовательское соглашение"),
-        zip: yup
+        street: yup
             .string()
-            .required("Индекс обязателен для заполнения")
-            .matches(/^\d+$/, "Индекс должен содержать только цифры")
-            .matches(/(?=.{6,})/, "Индекс должен состоять из 6 цифр"),
+            .required("Обязательно укажите вашу улицу")
+            .matches(
+                /^[A-zА-я]+(?:[\s.-][A-zА-я]+)*$/,
+                "Название должно содержать только буквы"
+            ),
         city: yup
             .string()
-            .required("Город обязателен для заполнения")
+            .required("Обязательно укажите ваш город")
             .matches(
                 /^[A-zА-я]+(?:[\s.-][A-zА-я]+)*$/,
                 "Название должно содержать только буквы"
             ),
-        country: yup
+        name: yup
             .string()
-            .required("Страна обязательна для заполнения")
+            .required("Укажите ваше имя")
             .matches(
                 /^[A-zА-я]+(?:[\s.-][A-zА-я]+)*$/,
-                "Название должно содержать только буквы"
-            ),
-        fio: yup
-            .string()
-            .required("ФИО обязательны для заполнения")
-            .matches(
-                /^[A-zА-я]+(?:[\s.-][A-zА-я]+)*$/,
-                "ФИО должны содержать только буквы"
+                "Имя должно содержать только буквы"
             ),
         password: yup
             .string()
@@ -96,7 +95,10 @@ const RegisterForm = () => {
         e.preventDefault();
         const isValid = validate();
         if (!isValid) return;
-        console.log(data);
+
+        dispatch(signUp(data));
+        navigate("/menu");
+        scrollToUpPage();
     };
 
     return (
@@ -119,11 +121,11 @@ const RegisterForm = () => {
                     error={errors.password}
                 />
                 <TextField
-                    label="ФИО"
-                    name="fio"
-                    value={data.fio}
+                    label="Имя"
+                    name="name"
+                    value={data.name}
                     onChange={handleChange}
-                    error={errors.fio}
+                    error={errors.name}
                 />
                 <RadioField
                     options={[
@@ -138,13 +140,6 @@ const RegisterForm = () => {
                 />
                 <p>Укажите адрес для доставки:</p>
                 <TextField
-                    label="Страна"
-                    name="country"
-                    value={data.country}
-                    onChange={handleChange}
-                    error={errors.country}
-                />
-                <TextField
                     label="Город"
                     name="city"
                     value={data.city}
@@ -152,11 +147,11 @@ const RegisterForm = () => {
                     error={errors.city}
                 />
                 <TextField
-                    label="Индекс"
-                    name="zip"
-                    value={data.zip}
+                    label="Улица"
+                    name="street"
+                    value={data.street}
                     onChange={handleChange}
-                    error={errors.zip}
+                    error={errors.street}
                 />
 
                 <CheckBoxField
@@ -165,14 +160,14 @@ const RegisterForm = () => {
                     onChange={handleChange}
                     error={errors.license}
                 >
-                    Согласен(а) на обработку личных данных в соответствии с
+                    Согласен(а) на обработку личных данных в соответствии с{" "}
                     <a type="button" className="text-primary">
                         пользовательским соглашением
                     </a>
                 </CheckBoxField>
                 <button
                     type="submit"
-                    className="btn btn-primary w-100 mb-4"
+                    className="btn btn-success w-100 mb-4"
                     disabled={!isValid}
                 >
                     Регистрация
