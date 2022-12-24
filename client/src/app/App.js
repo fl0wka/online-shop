@@ -1,10 +1,10 @@
 import React from "react";
-import { useRoutes } from "react-router-dom";
-import { routes } from "./routes";
+import AppLoader from "./components/ui/hoc/appLoader";
+import Navbar from "./components/ui/navbar/navbar";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import AppLoader from "./hoc/appLoader";
-import Navbar from "./components/ui/navbar";
+import { useRoutes } from "react-router-dom";
+import { routes } from "./routes";
 
 function App() {
     const element = useRoutes(routes);

@@ -1,20 +1,11 @@
-import React, { useEffect } from "react";
-import { Outlet, useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
-import { getIsLoggedIn } from "../store/currentUser";
+import React from "react";
+import { Outlet } from "react-router-dom";
 
 const Auth = () => {
-    const isLogged = useSelector(getIsLoggedIn());
-    const navigate = useNavigate();
-
-    useEffect(() => {
-        if (isLogged) return navigate("/");
-    }, []);
-
     return (
-        <div className="container mt-5">
+        <div className="container pt-5">
             <div className="row">
-                <div className="col-md-6 offset-md-3 shadow p-5">
+                <div className="col-md-6 offset-md-3 bg-light shadow p-5 rounded-3">
                     <Outlet />
                 </div>
             </div>

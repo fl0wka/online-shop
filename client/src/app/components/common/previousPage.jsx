@@ -3,8 +3,11 @@ import PropTypes from "prop-types";
 
 const PreviousPage = ({ back }) => {
     return (
-        <button className="btn btn-secondary mb-3" onClick={back}>
-            <i className="bi bi-caret-left-fill" /> назад
+        <button
+            className="btn btn-outline-dark m-3 fs-3 border-0 position-fixed top-50 start-0"
+            onClick={back}
+        >
+            <i className="bi bi-arrow-left"></i>
         </button>
     );
 };

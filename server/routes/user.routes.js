@@ -4,19 +4,18 @@ const auth = require('../middleware/auth.middleware');
 
 const router = express.Router({ mergeParams: true });
 
-// router.get('/', auth, async (req, res) => {
-//   try {
-//     const list = await User.find();
-//     res.send(list);
-//   } catch (error) {
-//     res
-//       .status(500)
-//       .json({ message: 'На сервере произошла ошибка. Попробуйте позже...' });
-//     // console.log(error);
-//   }
-// });
+router.get('/', auth, async (req, res) => {
+  try {
+    const list = await User.find();
+    res.send(list);
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: 'На сервере произошла ошибка. Попробуйте позже...' });
+  }
+});
 
-router.get('/currentuser', auth, async (req, res) => {
+router.get('/currentUser', auth, async (req, res) => {
   try {
     const currentUser = await User.findById(req.user._id);
     res.send(currentUser);
@@ -24,7 +23,6 @@ router.get('/currentuser', auth, async (req, res) => {
     res
       .status(500)
       .json({ message: 'На сервере произошла ошибка. Попробуйте позже...' });
-    // console.log(error);
   }
 });
 
@@ -47,7 +45,6 @@ router.patch('/:userId', auth, async (req, res) => {
     res
       .status(500)
       .json({ message: 'На сервере произошла ошибка. Попробуйте позже...' });
-    // console.log(error);
   }
 });
 

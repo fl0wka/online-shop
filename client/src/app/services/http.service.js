@@ -12,12 +12,6 @@ axios.interceptors.request.use(
         const refreshToken = localStorageService.getRefreshToken();
         const isExpired = refreshToken && expiresDate < Date.now();
 
-        // if (configFile.isFireBase) {
-        //     const containSlash = /\/$/gi.test(config.url);
-        //     config.url =
-        //         (containSlash ? config.url.slice(0, -1) : config.url) + ".json";
-        // }
-
         if (isExpired) {
             const data = await authService.refresh();
             localStorageService.setTokens(data);
@@ -38,7 +32,6 @@ axios.interceptors.request.use(
 
 axios.interceptors.response.use(
     (res) => {
-        // console.log(res.data);
         return res;
     },
     function (error) {
@@ -56,7 +49,7 @@ axios.interceptors.response.use(
 const httpService = {
     get: axios.get,
     put: axios.put,
-    post: axios.put,
+    post: axios.post,
     delete: axios.delete,
     patch: axios.patch
 };

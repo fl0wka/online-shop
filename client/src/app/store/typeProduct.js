@@ -38,6 +38,11 @@ export const loadTypeProduct = () => async (dispatch) => {
 };
 
 export const getTypeProduct = () => (state) => state.typeProduct.entities;
+export const getTypeProductById = (id) => (state) => {
+    return state.typeProduct.entities
+        ? state.typeProduct.entities.find((item) => item._id === id)
+        : null;
+};
 export const getTypeProductLoadingStatus = () => (state) =>
     state.typeProduct.isLoading;
 

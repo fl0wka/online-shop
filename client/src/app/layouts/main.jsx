@@ -1,7 +1,12 @@
 import React from "react";
+import { Outlet } from "react-router-dom";
 
 const Main = () => {
-    return <h3>Главная страница</h3>;
+    return (
+        <div className="container-fluid">
+            <Outlet />
+        </div>
+    );
 };
 
 export default Main;

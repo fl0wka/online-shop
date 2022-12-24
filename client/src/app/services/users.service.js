@@ -9,7 +9,7 @@ const usersService = {
         return data;
     },
     getUser: async () => {
-        const { data } = await httpService.get(usersEndpoint + "currentuser");
+        const { data } = await httpService.get(usersEndpoint + "currentUser");
         return data;
     },
     update: async (payload) => {

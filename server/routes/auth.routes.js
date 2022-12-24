@@ -1,16 +1,19 @@
 const express = require('express');
-const User = require('../models/User');
 const bcrypt = require('bcryptjs');
-const { check, validationResult } = require('express-validator');
+const User = require('../models/User');
 const tokenService = require('../services/token.service');
+const { check, validationResult } = require('express-validator');
 
 const router = express.Router({ mergeParams: true });
 
 router.post('/signUp', [
-  check('email', 'Некорректный email').isEmail(),
-  check('password', 'Пароль должен содержать не меньше 8 символов').isLength({
-    min: 8,
-  }),
+  check('email', 'Некорректный email').notEmpty().isEmail(),
+  check('password', 'Пароль должен содержать не меньше 8 символов')
+    .notEmpty()
+    .isLength({
+      min: 8,
+    })
+    .matches(/(?=.*[0-9])(?=.*[!@#$%^&*])(?=.*[A-Z])/g),
   async (req, res) => {
     try {
       const errors = validationResult(req);
@@ -38,6 +41,7 @@ router.post('/signUp', [
       const newUser = await User.create({
         ...req.body,
         password: hashedPassword,
+        role: 'consumer',
       });
 
       const tokens = tokenService.generate({ _id: newUser._id });
@@ -48,7 +52,6 @@ router.post('/signUp', [
       res.status(500).json({
         message: 'На сервере что-то пошло не так. Попробуйте позже...',
       });
-      // console.log(error);
     }
   },
 ]);
@@ -107,7 +110,6 @@ router.post('/signIn', [
       res.status(500).json({
         message: 'На сервере что-то пошло не так. Попробуйте позже...',
       });
-      // console.log(error);
     }
   },
 ]);
@@ -141,7 +143,6 @@ router.post('/token', async (req, res) => {
     res.status(500).json({
       message: 'На сервере что-то пошло не так. Попробуйте позже...',
     });
-    // console.log(error);
   }
 });
 

@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
-import CheckBoxField from "../form/checkBoxField";
-import TextField from "../form/textField";
-import * as yup from "yup";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import CheckBoxField from "../common/form/checkBoxField";
+import TextField from "../common/form/textField";
 import { signIn } from "../../store/currentUser";
+import { useDispatch } from "react-redux";
+import * as yup from "yup";
 
 const LoginForm = () => {
     const [data, setData] = useState({
@@ -39,7 +39,6 @@ const LoginForm = () => {
         return Object.keys(errors).length === 0;
     };
 
-    // Отключение или включение кнопки Submit при наличии ошибки заполнения поля
     const isValid = Object.keys(errors).length === 0;
 
     const handleSubmit = (e) => {

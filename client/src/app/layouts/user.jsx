@@ -5,7 +5,7 @@ import ProtectedRoute from "../components/common/protectedRoute";
 const User = () => {
     return (
         <ProtectedRoute>
-            <div className="container-fluid mt-3">
+            <div className="container-fluid pt-3">
                 <Outlet />
             </div>
         </ProtectedRoute>

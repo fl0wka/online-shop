@@ -1,8 +1,8 @@
 const { ObjectId } = require('mongoose').Types;
-const productsMock = require('../mock/products.json');
 const typeProductMock = require('../mock/typeProduct.json');
-const Product = require('../models/Product');
+const productsMock = require('../mock/products.json');
 const TypeProduct = require('../models/TypeProduct');
+const Product = require('../models/Product');
 
 module.exports = async () => {
   // Замена id тип String на Object

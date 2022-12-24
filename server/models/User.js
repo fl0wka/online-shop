@@ -8,6 +8,7 @@ const schema = Schema(
     sex: { type: String, enum: ['male', 'female', 'other'] },
     city: String,
     street: String,
+    role: String,
     license: Boolean,
   },
   { timestamps: true }

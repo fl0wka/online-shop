@@ -1,9 +1,9 @@
 import { createAction, createSlice } from "@reduxjs/toolkit";
-import { toast } from "react-toastify";
-import authService from "../services/auth.service";
 import localStorageService from "../services/localStorage.service";
-import usersService from "../services/users.service";
 import generateAuthError from "../utils/generateAuthError";
+import usersService from "../services/users.service";
+import authService from "../services/auth.service";
+import { toast } from "react-toastify";
 
 const initialState = localStorageService.getAccessToken()
     ? {
@@ -91,7 +91,10 @@ export const signIn = (payload, navigate, from) => async (dispatch) => {
         if (code === 400) {
             const errorMessage = generateAuthError(message);
             dispatch(authRequestedFailed(errorMessage));
-            toast.error(errorMessage);
+            toast.error(errorMessage, {
+                position: "top-center",
+                autoClose: 2000
+            });
         } else {
             dispatch(authRequestedFailed(error.message));
             toast.error(error.message);
@@ -121,7 +124,10 @@ export const updateUserData = (payload) => async (dispatch) => {
     try {
         const data = await usersService.update(payload);
         dispatch(currentUserUpdatedSuccess(data));
-        toast.success("Изменения сохранены!");
+        toast.success("Изменения сохранены!", {
+            position: "top-center",
+            autoClose: 1000
+        });
     } catch (error) {
         dispatch(currentUserUpdatedFailed(error.message));
         toast.error(error.message);
@@ -139,17 +145,6 @@ export const loadCurrentUserData = () => async (dispatch) => {
         toast.error(error.message);
     }
 };
-
-// export const loadUsersList = () => async (dispatch) => {
-//     dispatch(usersRequested);
-//     try {
-//         const data = await usersService.get();
-//         dispatch(usersReceived(data));
-//     } catch (error) {
-//         dispatch(usersRequestedFailed(error.message));
-//         toast.error(error.message);
-//     }
-// };
 
 export const getIsLoggedIn = () => (state) => state.currentUser.isLoggedIn;
 export const getCurrentUserData = () => (state) => state.currentUser.entities;
