@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { scrollToUpPage } from "../../utils/scrollToUpPage";
 import CheckBoxField from "../common/form/checkBoxField";
 import { Link, useNavigate } from "react-router-dom";
 import RadioField from "../common/form/radioField";
@@ -94,9 +93,8 @@ const RegisterForm = () => {
         e.preventDefault();
         const isValid = validate();
         if (!isValid) return;
-        dispatch(signUp(data));
-        navigate("/");
-        scrollToUpPage();
+        const redirect = "/";
+        dispatch(signUp(data, navigate, redirect));
     };
 
     return (

@@ -27,7 +27,7 @@ const ProductPage = () => {
             <PreviousPage back={backPage} />
             <div className="d-flex row text-center">
                 <div className="bg-warning bg-opacity-25 my-2">
-                    <div className="d-inline-flex justify-content-between col-5">
+                    <div className="d-inline-flex justify-content-around col-5">
                         <h4 className="pt-2">{currentProduct.name}</h4>
                         <div>
                             <ButtonAddToFavorite

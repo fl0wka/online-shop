@@ -102,15 +102,26 @@ export const signIn = (payload, navigate, from) => async (dispatch) => {
     }
 };
 
-export const signUp = (payload) => async (dispatch) => {
+export const signUp = (payload, navigate, redirect) => async (dispatch) => {
     dispatch(authRequested());
     try {
         const data = await authService.register(payload);
         localStorageService.setTokens(data);
         dispatch(authRequestedSuccess({ userId: data.userId }));
+        navigate(redirect);
     } catch (error) {
-        dispatch(authRequestedFailed(error.message));
-        toast.error(error.message);
+        const { code, message } = error.response.data.error;
+        if (code === 400) {
+            const errorMessage = generateAuthError(message);
+            dispatch(authRequestedFailed(errorMessage));
+            toast.error(errorMessage, {
+                position: "top-center",
+                autoClose: 2000
+            });
+        } else {
+            dispatch(authRequestedFailed(error.message));
+            toast.error(error.message);
+        }
     }
 };
 
